@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SNW — Show No Weakness</title>
+<style>
+  body {
+    margin: 0;
+    font-family: 'Courier New', monospace;
+    background: #000;
+    color: #fff;
+  }
+  header {
+    text-align: center;
+    padding: 40px 20px;
+    border-bottom: 2px solid #fff;
+    background: #111;
+  }
+  header h1 {
+    margin: 0;
+    font-size: 3rem;
+    letter-spacing: 4px;
+    color: #fff;
+    text-shadow: 0 0 10px #fff, 0 0 20px #fff;
+    animation: flicker 2s infinite;
+  }
+  @keyframes flicker {
+    0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {opacity:1;}
+    20%, 22%, 24%, 55% {opacity:0.2;}
+  }
+  main {
+    max-width: 1000px;
+    margin: 50px auto;
+    padding: 0 20px;
+  }
+  .intro {
+    text-align: center;
+    margin-bottom: 50px;
+    font-size: 1.2rem;
+    line-height: 1.6;
+    color: #ccc;
+    letter-spacing: 1px;
+  }
+  .members {
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(250px,1fr));
+    gap: 30px;
+  }
+  .member-card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid #fff;
+    padding: 25px;
+    border-radius: 10px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(255,255,255,0.2);
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+  .member-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 0 40px rgba(255,255,255,0.6);
+  }
+  .member-card::before {
+    content: 'CLASSIFIED';
+    font-size: 2rem;
+    color: rgba(255,255,255,0.05);
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    transform: rotate(-10deg);
+  }
+  .member-card img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    margin-bottom: 12px;
+    filter: grayscale(100%);
+  }
+  .member-card h3 {
+    margin: 10px 0 5px;
+    font-size: 1.3rem;
+    color: #fff;
+    letter-spacing: 1px;
+    text-shadow: 0 0 5px #fff;
+  }
+  .member-card p {
+    font-size: 0.95rem;
+    color: #ccc;
+    line-height: 1.4;
+  }
+  footer {
+    text-align: center;
+    padding: 20px;
+    border-top: 2px solid #fff;
+    margin-top: 50px;
+    font-size: 0.9rem;
+    color: #999;
+  }
+  /* Eerie animated noise overlay */
+  .noise {
+    pointer-events: none;
+    position: fixed;
+    top:0; left:0;
+    width:100%; height:100%;
+    background: url('https://i.imgur.com/6RWULZb.png') repeat;
+    opacity: 0.05;
+    animation: static 0.1s steps(2) infinite;
+    mix-blend-mode: overlay;
+  }
+  @keyframes static {
+    0% {background-position:0 0;}
+    100% {background-position:100% 100%;}
+  }
+</style>
+</head>
+<body>
+<div class="noise"></div>
+  <header>
+    <h1>SNW — Show No Weakness</h1>
+  </header>
+  <main>
+    <section class="intro">
+      A classified, black-and-white dossier introducing the members of SNW. Only fragments of their presence are revealed. Beware of what lurks in the shadows.
+    </section>
+
+    <section class="members">
+      <div class="member-card">
+        <img src="https://via.placeholder.com/100" alt="KidsNextDoor">
+        <h3>KidsNextDoor</h3>
+        <p>The mastermind. Always steps ahead, controlling situations in silence and shadow.</p>
+      </div>
+      <div class="member-card">
+        <img src="https://via.placeholder.com/100" alt="Cloudzz">
+        <h3>Cloudzz</h3>
+        <p>The shadow operator. Moves unseen, leaving traces only where intended.</p>
+      </div>
+      <div class="member-card">
+        <img src="https://via.placeholder.com/100" alt="K1ng">
+        <h3>K1ng</h3>
+        <p>The enforcer. Commands attention and instills fear in the hearts of those who oppose.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    &copy; 2025 SNW — Fictional dossier. For roleplay and storytelling purposes only.
+  </footer>
+</body>
+</html>
