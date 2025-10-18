@@ -1,152 +1,213 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SNW — Show No Weakness</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>SNW — Classified Dossier (Enhanced)</title>
 <style>
-  body {
-    margin: 0;
-    font-family: 'Courier New', monospace;
-    background: #000;
-    color: #fff;
-  }
-  header {
-    text-align: center;
-    padding: 40px 20px;
-    border-bottom: 2px solid #fff;
-    background: #111;
-  }
-  header h1 {
-    margin: 0;
-    font-size: 3rem;
-    letter-spacing: 4px;
-    color: #fff;
-    text-shadow: 0 0 10px #fff, 0 0 20px #fff;
-    animation: flicker 2s infinite;
-  }
-  @keyframes flicker {
-    0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {opacity:1;}
-    20%, 22%, 24%, 55% {opacity:0.2;}
-  }
-  main {
-    max-width: 1000px;
-    margin: 50px auto;
-    padding: 0 20px;
-  }
-  .intro {
-    text-align: center;
-    margin-bottom: 50px;
-    font-size: 1.2rem;
-    line-height: 1.6;
-    color: #ccc;
-    letter-spacing: 1px;
-  }
-  .members {
-    display: grid;
-    grid-template-columns: repeat(auto-fit,minmax(250px,1fr));
-    gap: 30px;
-  }
-  .member-card {
-    background: rgba(255,255,255,0.05);
-    border: 1px solid #fff;
-    padding: 25px;
-    border-radius: 10px;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-    box-shadow: 0 0 20px rgba(255,255,255,0.2);
-    transition: transform 0.3s, box-shadow 0.3s;
-  }
-  .member-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 0 40px rgba(255,255,255,0.6);
-  }
-  .member-card::before {
-    content: 'CLASSIFIED';
-    font-size: 2rem;
-    color: rgba(255,255,255,0.05);
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    transform: rotate(-10deg);
-  }
-  .member-card img {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    border: 2px solid #fff;
-    margin-bottom: 12px;
-    filter: grayscale(100%);
-  }
-  .member-card h3 {
-    margin: 10px 0 5px;
-    font-size: 1.3rem;
-    color: #fff;
-    letter-spacing: 1px;
-    text-shadow: 0 0 5px #fff;
-  }
-  .member-card p {
-    font-size: 0.95rem;
-    color: #ccc;
-    line-height: 1.4;
-  }
-  footer {
-    text-align: center;
-    padding: 20px;
-    border-top: 2px solid #fff;
-    margin-top: 50px;
-    font-size: 0.9rem;
-    color: #999;
-  }
-  /* Eerie animated noise overlay */
-  .noise {
-    pointer-events: none;
-    position: fixed;
-    top:0; left:0;
-    width:100%; height:100%;
-    background: url('https://i.imgur.com/6RWULZb.png') repeat;
-    opacity: 0.05;
-    animation: static 0.1s steps(2) infinite;
-    mix-blend-mode: overlay;
-  }
-  @keyframes static {
-    0% {background-position:0 0;}
-    100% {background-position:100% 100%;}
-  }
+  /* Base */
+  :root{--bg:#000;--paper:#070707;--ink:#fff;--muted:#bdbdbd;--accent:#e6e6e6}
+  html,body{height:100%;margin:0;font-family:Inter,ui-monospace,SFMono-Regular,monospace;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1100px;margin:30px auto;padding:20px;position:relative}
+
+  /* Floating particles (subtle) */
+  .particles{position:fixed;inset:0;pointer-events:none;z-index:0}
+  .particle{position:absolute;width:6px;height:6px;background:#fff;opacity:.04;border-radius:50%;filter:blur(1px);animation:drift 15s linear infinite}
+  @keyframes drift{from{transform:translateY(-10vh) translateX(0)}to{transform:translateY(110vh) translateX(80vw)}}
+
+  header{position:relative;z-index:2;text-align:center;padding:28px 12px;border-bottom:1px solid rgba(255,255,255,0.06)}
+  .title{font-size:38px;letter-spacing:6px;margin:0;font-weight:700;text-transform:uppercase}
+  .subtitle{color:var(--muted);margin-top:6px;font-size:13px}
+
+  /* Dossier layout */
+  .board{display:grid;grid-template-columns:1fr 360px;gap:28px;margin-top:28px;position:relative;z-index:2}
+  main.card{background:linear-gradient(180deg,#080808,#0a0a0a);border:1px solid rgba(255,255,255,0.06);padding:22px;border-radius:10px;box-shadow:0 20px 60px rgba(0,0,0,0.7)}
+  aside.panel{background:#070707;border:1px solid rgba(255,255,255,0.03);padding:18px;border-radius:10px}
+
+  /* Member cards */
+  .members{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px}
+  .member{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);padding:18px;border-radius:8px;position:relative;overflow:hidden}
+  .member .label{position:absolute;top:10px;left:12px;font-size:11px;color:rgba(255,255,255,0.06);transform:rotate(-10deg)}
+  .avatar{width:92px;height:92px;border-radius:50%;border:2px solid #fff;object-fit:cover;filter:grayscale(100%);display:block;margin:0 auto 10px}
+  h3{margin:6px 0 4px;font-size:20px;text-align:center;letter-spacing:1px}
+  .role{color:var(--muted);font-size:13px;text-align:center;margin-bottom:10px}
+
+  /* decrypt area */
+  .snippet{background:#0a0a0a;border:1px dashed rgba(255,255,255,0.04);padding:12px;border-radius:6px;font-family:monospace;color:var(--muted);min-height:48px}
+  .btn{display:inline-block;padding:8px 12px;border-radius:6px;border:0;background:transparent;color:var(--ink);cursor:pointer;font-weight:700}
+  .btn.primary{background:#fff;color:#000}
+
+  /* hidden decrypted text */
+  .hidden{opacity:0;max-height:0;overflow:hidden;transition:all .6s cubic-bezier(.2,.9,.2,1);}
+  .hidden.revealed{opacity:1;max-height:400px;margin-top:12px}
+
+  /* flicker / glitch */
+  .glitch{position:relative;display:inline-block}
+  .glitch::before,.glitch::after{content:attr(data-text);position:absolute;left:0;top:0;mix-blend-mode:screen;opacity:.12}
+  .glitch::before{transform:translate(2px,-2px);clip-path:rect(1px,9999px,12px,0)}
+  .glitch::after{transform:translate(-2px,2px);clip-path:rect(14px,9999px,100px,0)}
+  @keyframes shadowFlicker{0%,100%{text-shadow:none}20%{text-shadow:0 0 12px rgba(255,255,255,0.8)}50%{text-shadow:0 0 6px rgba(255,255,255,0.6)}}
+  .title{animation:shadowFlicker 4s infinite}
+
+  /* classified watermark */
+  .watermark{position:absolute;right:18px;top:40px;font-size:88px;color:rgba(255,255,255,0.03);transform:rotate(-18deg);letter-spacing:8px;pointer-events:none}
+
+  /* footer */
+  footer{margin-top:26px;text-align:center;color:var(--muted);font-size:13px}
+
+  /* responsive */
+  @media (max-width:980px){.board{grid-template-columns:1fr}.watermark{display:none}}
+
+  /* scanline for decrypt text */
+  .scanline{position:relative;overflow:hidden}
+  .scanline::after{content:'';position:absolute;left:-30%;top:0;width:30%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.04),transparent);animation:scans 2.2s linear infinite}
+  @keyframes scans{from{left:-40%}to{left:140%}}
+
+  /* subtle paper tear effect */
+  .tear{position:absolute;left:-8px;top:12px;width:12px;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.02));transform:skewX(-8deg)}
 </style>
 </head>
 <body>
-<div class="noise"></div>
-  <header>
-    <h1>SNW — Show No Weakness</h1>
-  </header>
-  <main>
-    <section class="intro">
-      A classified, black-and-white dossier introducing the members of SNW. Only fragments of their presence are revealed. Beware of what lurks in the shadows.
-    </section>
+  <div class="particles" id="particles"></div>
+  <div class="wrap">
+    <header>
+      <div class="title glitch" data-text="SNW">SNW</div>
+      <div class="subtitle">SHOW NO WEAKNESS — Classified Dossier</div>
+      <div class="watermark">CLASSIFIED</div>
+    </header>
 
-    <section class="members">
-      <div class="member-card">
-        <img src="https://via.placeholder.com/100" alt="KidsNextDoor">
-        <h3>KidsNextDoor</h3>
-        <p>The mastermind. Always steps ahead, controlling situations in silence and shadow.</p>
-      </div>
-      <div class="member-card">
-        <img src="https://via.placeholder.com/100" alt="Cloudzz">
-        <h3>Cloudzz</h3>
-        <p>The shadow operator. Moves unseen, leaving traces only where intended.</p>
-      </div>
-      <div class="member-card">
-        <img src="https://via.placeholder.com/100" alt="K1ng">
-        <h3>K1ng</h3>
-        <p>The enforcer. Commands attention and instills fear in the hearts of those who oppose.</p>
-      </div>
-    </section>
-  </main>
+    <div class="board">
+      <main class="card">
+        <section style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px">
+          <div style="flex:1">
+            <h2 style="margin:0 0 8px;font-family:monospace">Dossier Brief</h2>
+            <div class="snippet scanline">This file contains an introduction to the collective. Information below is intentionally sparse — reveal only what you must.</div>
+          </div>
+          <div style="width:220px;text-align:right">
+            <button class="btn" id="revealAll">Decrypt All</button>
+            <button class="btn primary" id="downloadBtn">Export</button>
+          </div>
+        </section>
 
-  <footer>
-    &copy; 2025 SNW — Fictional dossier. For roleplay and storytelling purposes only.
-  </footer>
+        <hr style="border:none;border-top:1px solid rgba(255,255,255,0.04);margin:18px 0">
+
+        <section class="members" id="members">
+          <!-- KidsNextDoor -->
+          <article class="member" data-id="kids">
+            <div class="label">FILE #001</div>
+            <img class="avatar" src="https://via.placeholder.com/200?text=KND" alt="KidsNextDoor">
+            <h3>KidsNextDoor</h3>
+            <div class="role">Mastermind / Strategist</div>
+            <div class="snippet scanline">Operational tendencies: calculated, anticipatory, surgical in timing.</div>
+            <div class="hidden" id="kids-hidden">
+              <div style="margin-top:10px;white-space:pre-wrap;font-family:monospace;color:var(--muted)" id="kids-text"></div>
+            </div>
+            <div style="margin-top:12px;text-align:center">
+              <button class="btn" data-target="kids">Decrypt</button>
+            </div>
+          </article>
+
+          <!-- Cloudzz -->
+          <article class="member" data-id="cloudzz">
+            <div class="label">FILE #002</div>
+            <img class="avatar" src="https://via.placeholder.com/200?text=CZ" alt="Cloudzz">
+            <h3>Cloudzz</h3>
+            <div class="role">Shadow Operator / Infiltrator</div>
+            <div class="snippet scanline">Movements: silent, unpredictable; leaves traces only when necessary.</div>
+            <div class="hidden" id="cloudzz-hidden">
+              <div style="margin-top:10px;white-space:pre-wrap;font-family:monospace;color:var(--muted)" id="cloudzz-text"></div>
+            </div>
+            <div style="margin-top:12px;text-align:center">
+              <button class="btn" data-target="cloudzz">Decrypt</button>
+            </div>
+          </article>
+
+          <!-- K1ng -->
+          <article class="member" data-id="k1ng">
+            <div class="label">FILE #003</div>
+            <img class="avatar" src="https://via.placeholder.com/200?text=K1" alt="K1ng">
+            <h3>K1ng</h3>
+            <div class="role">Enforcer / Presence</div>
+            <div class="snippet scanline">Signature: decisive, dominant; enforces boundaries when required.</div>
+            <div class="hidden" id="k1ng-hidden">
+              <div style="margin-top:10px;white-space:pre-wrap;font-family:monospace;color:var(--muted)" id="k1ng-text"></div>
+            </div>
+            <div style="margin-top:12px;text-align:center">
+              <button class="btn" data-target="k1ng">Decrypt</button>
+            </div>
+          </article>
+
+        </section>
+
+        <section style="margin-top:18px">
+          <h4 style="margin:0 0 8px">Notes</h4>
+          <div class="snippet">Only use this dossier for roleplay and creative presentation. No private data is stored here. Click decrypt to simulate reveal.</div>
+        </section>
+
+      </main>
+
+      <aside class="panel">
+        <h4 style="margin:0 0 8px">Controls</h4>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <button class="btn" id="revealOne">Decrypt Next</button>
+          <button class="btn" id="redactAll">Redact All</button>
+          <button class="btn" id="glowToggle">Toggle Flicker</button>
+        </div>
+
+        <hr style="border:none;border-top:1px solid rgba(255,255,255,0.04);margin:12px 0">
+
+        <h4 style="margin:0 0 8px">Export Dossier</h4>
+        <p class="snippet">Download a mock JSON export of the (fictional) dossier.</p>
+        <button class="btn primary" id="export">Download JSON</button>
+
+        <hr style="border:none;border-top:1px solid rgba(255,255,255,0.04);margin:12px 0">
+
+        <div style="font-size:13px;color:var(--muted)">Disclaimer: This page is fictional and intended for roleplay / creative use. Do not use to harass or expose real people.</div>
+      </aside>
+    </div>
+
+    <footer>
+      &copy; 2025 SNW — Fictional Dossier • For creative use only
+    </footer>
+  </div>
+
+<script>
+// --- Particles generator ---
+const particlesContainer = document.getElementById('particles');
+for(let i=0;i<40;i++){ const p=document.createElement('div');p.className='particle';p.style.left=Math.random()*100+'%';p.style.top=(-20+Math.random()*40)+'vh';p.style.opacity=(0.02+Math.random()*0.06);p.style.transform='scale('+ (0.3+Math.random()*1.2)+')';p.style.animationDuration=(8+Math.random()*20)+'s';particlesContainer.appendChild(p);} 
+
+// --- Decrypt/typewriter effect ---
+function typeReveal(el, text, speed=24){ el.innerText=''; el.parentElement.classList.add('revealing'); let i=0; const t=setInterval(()=>{ el.innerText += text[i++] || ''; if(i>text.length){ clearInterval(t); el.parentElement.classList.remove('revealing'); } }, speed);}
+
+const bios = {
+  kids: `Alias: KidsNextDoor\nRole: Mastermind\nMode: Predictive orchestration — plans with surgical timing.\nNote: Speaks in short directives; leaves redacted traces.\n`,
+  cloudzz: `Alias: Cloudzz\nRole: Shadow Operator\nMode: Infiltration & extraction — moves through noise.\nNote: Uses misdirection; presence felt only when intended.\n`,
+  k1ng: `Alias: K1ng\nRole: Enforcer\nMode: Controlled dominance — enacts decisions without hesitation.\nNote: Commands attention; protects the collective.\n`
+};
+
+function decrypt(target){ const hid = document.getElementById(target+'-hidden'); const textEl = document.getElementById(target+'-text'); if(hid.classList.contains('revealed')){ hid.classList.remove('revealed'); return; } hid.classList.add('revealed'); typeReveal(textEl, bios[target], 18); }
+
+document.querySelectorAll('button[data-target]').forEach(b=> b.addEventListener('click', ()=>{ decrypt(b.getAttribute('data-target')); }));
+
+// Reveal Next cycling
+const ids=['kids','cloudzz','k1ng']; let idx=0; document.getElementById('revealOne').addEventListener('click', ()=>{ decrypt(ids[idx]); idx=(idx+1)%ids.length; });
+
+// Reveal All
+document.getElementById('revealAll').addEventListener('click', ()=>{ ids.forEach(id=>{ const hid=document.getElementById(id+'-hidden'); if(!hid.classList.contains('revealed')){ hid.classList.add('revealed'); const txt=document.getElementById(id+'-text'); typeReveal(txt, bios[id], 12); } }); });
+
+// Redact All
+document.getElementById('redactAll').addEventListener('click', ()=>{ ids.forEach(id=>{ const hid=document.getElementById(id+'-hidden'); hid.classList.remove('revealed'); const txt=document.getElementById(id+'-text'); txt.innerText=''; }); });
+
+// Toggle flicker (title glow)
+let flickerOn=true; document.getElementById('glowToggle').addEventListener('click', ()=>{ flickerOn=!flickerOn; document.querySelector('.title').style.textShadow = flickerOn? '0 0 10px #fff, 0 0 20px #fff' : 'none'; });
+
+// Export JSON
+function exportDossier(){ const data={title:'SNW — Fictional Dossier',date:new Date().toISOString(),members:[{id:'kids',name:'KidsNextDoor',role:'Mastermind'},{id:'cloudzz',name:'Cloudzz',role:'Shadow Operator'},{id:'k1ng',name:'K1ng',role:'Enforcer'}],notes:['Fictional dossier for roleplay only']}; const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='snw-dossier.json'; a.click(); URL.revokeObjectURL(url); }
+document.getElementById('export').addEventListener('click', exportDossier); document.getElementById('downloadBtn').addEventListener('click', exportDossier);
+
+// small helper: initial subtle reveal of snippets
+setTimeout(()=>{ document.querySelectorAll('.snippet').forEach((s,i)=> s.style.opacity=1); },400);
+
+</script>
 </body>
 </html>
